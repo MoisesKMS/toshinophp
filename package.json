@@ -1,0 +1,42 @@
+{
+    "name": "toshinomvc",
+    "version": "1.0.0",
+    "description": "Plantilla MVC en PHP",
+    "main": "index.js",
+    "scripts": {
+        "dev": "gulp dev",
+        "first_dev": "gulp first_dev",
+        "img_compile": "gulp img_compile",
+        "src_dev": "gulp src_dev",
+        "src_build": "gulp src_build",
+        "build": "gulp build"
+    },
+    "keywords": [
+        "MVC",
+        "PHP",
+        "MySQL"
+    ],
+    "author": "Moises Jimenez",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.18.0",
+        "@babel/preset-env": "^7.18.0",
+        "@babel/register": "^7.17.7",
+        "autoprefixer": "^10.4.7",
+        "browser-sync": "^2.27.10",
+        "cssnano": "^5.1.8",
+        "dotenv": "^16.1.4",
+        "gulp": "^4.0.2",
+        "gulp-avif": "^1.1.1",
+        "gulp-babel": "^8.0.0",
+        "gulp-connect-php": "^1.0.3",
+        "gulp-imagemin": "^7.1.0",
+        "gulp-postcss": "^9.0.1",
+        "gulp-rename": "^2.0.0",
+        "gulp-sass": "^5.1.0",
+        "gulp-sourcemaps": "^3.0.0",
+        "gulp-terser": "^2.1.0",
+        "gulp-webp": "^4.0.1",
+        "sass": "^1.52.0"
+    }
+}

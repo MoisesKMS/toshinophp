@@ -1,0 +1,22 @@
+{
+    "name": "moiseskms/toshinomvc",
+    "description": "Plantilla MVC en PHP",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Moisés Jiménez",
+            "email": "MoisesJimenez@Yandex.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "MVC\\": "./",
+            "Controllers\\": "./controllers",
+            "Models\\": "./models",
+            "Classes\\": "./classes"
+        }
+    }
+}
