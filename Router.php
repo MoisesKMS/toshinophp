@@ -7,10 +7,12 @@ class Router {
     public $rutasPost = [];
 
     public function get($url, $funcion) {
+        $url = preg_replace('/\{([a-zA-Z]+)\}/', '(?P<\1>[a-zA-Z0-9-]+)', $url);
         $this->rutasGet[$url] = $funcion;
     }
 
     public function post($url, $funcion) {
+        $url = preg_replace('/\{([a-zA-Z]+)\}/', '(?P<\1>[a-zA-Z0-9-]+)', $url);
         $this->rutasPost[$url] = $funcion;
     }
 
@@ -19,21 +21,27 @@ class Router {
         $urlActual = explode('?', $urlActual)[0] ?? $urlActual;
         $metodo = $_SERVER['REQUEST_METHOD'];
 
-        if ($metodo === 'GET') {
-            $funcion = $this->rutasGet[$urlActual] ?? null;
-        } else {
-            $funcion = $this->rutasPost[$urlActual] ?? null;
+        $rutas = ($metodo === 'GET') ? $this->rutasGet : $this->rutasPost;
+
+        foreach ($rutas as $url => $funcion) {
+            $pattern = '#^' . $url . '$#';
+            if (preg_match($pattern, $urlActual, $matches)) {
+                // La URL coincide y tiene una función asociada
+                array_shift($matches); // Elimina el primer elemento que contiene la URL completa
+
+                // Agrega el objeto Router como primer argumento en el llamado a la función
+                array_unshift($matches, $this);
+
+                // Llama a la función con los parámetros capturados de la URL
+                call_user_func_array($funcion, array_values($matches));
+                return;
+            }
         }
 
-        if ($funcion) {
-            // La url existe y tiene una funcion asociada
-            call_user_func($funcion, $this);
-        } else {
-            // La url no existe o no tiene una funcion asociada
-            header('Location: /404');
-            exit;
-            echo 'Error 404, Página no encontrada';
-        }
+        // La URL no existe o no tiene una función asociada
+        header('Location: /404');
+        exit;
+        echo 'Error 404, Página no encontrada';
     }
 
     //Muestra una vista
