@@ -19,14 +19,17 @@ class ActiveRecord {
         self::$db = $database;
     }
 
+    // almacena una alerta en memoria
     public static function setAlerta($tipo, $mensaje) {
         static::$alertas[$tipo][] = $mensaje;
     }
+
     // Validación
     public static function getAlertas() {
         return static::$alertas;
     }
 
+    // valida si las funcion de alertas en memoria esta vacia
     public function validar() {
         static::$alertas = [];
         return static::$alertas;
@@ -45,6 +48,7 @@ class ActiveRecord {
         return $resultado;
     }
 
+    // obtiene todos los regiostros
     public static function all() {
         $query = "SELECT * FROM " . static::$tabla;
         $resultado = self::consultarSQL($query);
@@ -65,11 +69,26 @@ class ActiveRecord {
         return array_shift($resultado);
     }
 
+    // Paginar registros
+    public static function paginar($por_pagina, $offset) {
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id DESC LIMIT {$por_pagina} OFFSET {$offset}";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
     // Busqueda Where con Columna
     public static function where($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'";
         $resultado = self::consultarSQL($query);
         return array_shift($resultado);
+    }
+
+    // Traer total de registros (COUNT)
+    public static function total() {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla;
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+        return array_shift($total);
     }
 
     // Busca todos los registros que pertenecen a un campo
@@ -107,6 +126,7 @@ class ActiveRecord {
         ];
     }
 
+    // actualiza un registro de manera mas especifica
     public function actualizar() {
         // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
@@ -122,8 +142,6 @@ class ActiveRecord {
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
         $query .= " LIMIT 1 ";
 
-        // debuguear($query);
-
         $resultado = self::$db->query($query);
         return $resultado;
     }
@@ -135,6 +153,7 @@ class ActiveRecord {
         return $resultado;
     }
 
+    // hace una consulta especifica en a SQL
     public static function consultarSQL($query) {
         // Consultar la base de datos
         $resultado = self::$db->query($query);
@@ -152,6 +171,7 @@ class ActiveRecord {
         return $array;
     }
 
+    // Convierte un arreglo a un objeto
     protected static function crearObjeto($registro) {
         $objeto = new static;
 
@@ -164,8 +184,6 @@ class ActiveRecord {
         return $objeto;
     }
 
-
-
     // Identificar y unir los atributos de la BD
     public function atributos() {
         $atributos = [];
@@ -176,6 +194,7 @@ class ActiveRecord {
         return $atributos;
     }
 
+    // Transforma contenido malicioso en solo texto
     public function sanitizarAtributos() {
         $atributos = $this->atributos();
         $sanitizado = [];
@@ -185,6 +204,7 @@ class ActiveRecord {
         return $sanitizado;
     }
 
+    // Sincroniza los argumetos dados con las variables del modelo
     public function sincronizar($args = []) {
         foreach ($args as $key => $value) {
             if (property_exists($this, $key) && !is_null($value)) {
