@@ -3,7 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php'; // cargamos el autoload
 
 // cargamos las variables de entorno
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../.env');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->safeLoad();
 
 require 'funciones.php'; // Funciones disponibles en todo el proyecto
